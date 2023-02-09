@@ -1,0 +1,124 @@
+const int BLED=9;
+const int GLED=10;
+const int RLED=11;
+const int BUTTON=2;
+
+boolean lastBUTTON = LOW;
+boolean currentBUTTON = LOW;
+int ledMode = 0;
+int ran1 = random(255);
+int ran2 = random(255);
+int ran3 = random(255);
+
+void setup() 
+{
+  pinMode (BLED, OUTPUT); //Set Blue LED as Output
+  pinMode (GLED, OUTPUT); //Set Green LED as Output
+  pinMode (RLED, OUTPUT); //Set Red LED as Output
+  pinMode (BUTTON, INPUT); //Set button as input (not required)
+}
+
+boolean debounce(boolean last)
+{
+  boolean current = digitalRead(BUTTON);
+  if (last != current)
+  {
+    delay(5);
+    current = digitalRead(BUTTON);
+  }
+  return current;
+}
+void setMode(int mode)
+{
+  if(mode == 1)
+  {
+    digitalWrite(RLED, HIGH);
+    digitalWrite(GLED, LOW);
+    digitalWrite(BLED, LOW);
+  }
+
+  else if (mode == 2)
+  {
+    digitalWrite(RLED, LOW);
+    digitalWrite(GLED, HIGH);
+    digitalWrite(BLED, LOW);
+  }
+
+  else if (mode == 3)
+  {
+    digitalWrite(RLED, LOW);
+    digitalWrite(GLED, LOW);
+    digitalWrite(BLED, HIGH);
+  }
+  
+  else if (mode == 4)
+  {
+    analogWrite(RLED, 127);
+    analogWrite(GLED, 0);
+    analogWrite(BLED, 127);
+  }
+  
+  else if (mode == 5)
+  {
+    analogWrite(RLED, 0);
+    analogWrite(GLED, 127);
+    analogWrite(BLED, 127);
+  }
+  
+  else if (mode == 6)
+  {
+    analogWrite(RLED, 255);
+    analogWrite(GLED, 127);
+    analogWrite(BLED, 0);
+  }
+
+  else if (mode == 7)
+  {
+    analogWrite(RLED, 170);
+    analogWrite(GLED, 170);
+    analogWrite(BLED, 170);
+  }
+
+  else if (mode == 8)
+  {
+    analogWrite(RLED, 255);
+    analogWrite(GLED, 75);
+    analogWrite(BLED, 140);
+  }
+
+   else if (mode == 9)
+   {
+     analogWrite (RLED, ran1);
+     analogWrite (GLED, ran2);
+     analogWrite (BLED, ran3);
+   }
+  else
+  {
+    digitalWrite(RLED, LOW);
+    digitalWrite(GLED, LOW);
+    digitalWrite(BLED, LOW);
+  }
+}    
+
+void loop() 
+{
+  pinMode (BUTTON, INPUT);
+  pinMode (BLED, OUTPUT); //Set Blue LED as Output
+  pinMode (GLED, OUTPUT); //Set Green LED as Output
+  pinMode (RLED, OUTPUT); //Set Red LED as Output
+  
+  currentBUTTON = debounce(lastBUTTON);
+  if(lastBUTTON == LOW && currentBUTTON == HIGH)
+  {
+    ledMode++;
+  }
+  lastBUTTON = currentBUTTON;
+  if (ledMode == 10)
+  { 
+    ran1 = random(255);
+    ran2 = random(255);
+    ran3 = random(255);
+    ledMode = 0;
+  }
+  setMode(ledMode);
+} 
